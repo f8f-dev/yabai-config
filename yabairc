@@ -4,14 +4,23 @@
 yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
 sudo yabai --load-sa
 
-# .. more yabai startup stuff
-#
-# yabai -m config layout bsp
-# yabai -m config auto_balance on
+# Link app to spaces
+# yabai -m rule --add app="^Firefox$" space=1 focus=on
+# yabai -m rule --add app="^WezTerm$" space=2 focus=on
+# yabai -m rule --add app="^Safari$" space=3
+# yabai -m signal --add event=window_created app="^WezTerm$" action="yabai -m window \$YABAI_WINDOW_ID --space 2; yabai -m window --focus \$YABAI_WINDOW_ID"
+# yabai -m signal --add event=window_created app="^Safari$" action="yabai -m window --focus \$YABAI_WINDOW_ID"
+
+default_spaces_count=3
+current_spaces_count=$(yabai -m query --spaces | jq '. | length')
+while [ "$current_spaces_count" -lt "$default_spaces_count" ]; do
+    yabai -m space --create
+    current_spaces_count=$(yabai -m query --spaces | jq '. | length')
+done
 
 yabai -m config                                 \
     external_bar                 main:20:0      \
-    menubar_opacity              0.0            \
+    menubar_opacity              1.0            \
     mouse_follows_focus          off            \
     focus_follows_mouse          off            \
     display_arrangement_order    default        \
@@ -30,11 +39,11 @@ yabai -m config                                 \
     split_ratio                  0.50           \
     split_type                   auto           \
     auto_balance                 off            \
-    top_padding                  06             \
-    bottom_padding               06             \
-    left_padding                 06             \
-    right_padding                06             \
-    window_gap                   06             \
+    top_padding                  00             \
+    bottom_padding               00             \
+    left_padding                 00             \
+    right_padding                00             \
+    window_gap                   00             \
     layout                       bsp            \
     mouse_modifier               fn             \
     mouse_action1                move           \
