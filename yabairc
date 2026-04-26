@@ -4,13 +4,7 @@
 yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
 sudo yabai --load-sa
 
-# Link app to spaces
-# yabai -m rule --add app="^Firefox$" space=1 focus=on
-# yabai -m rule --add app="^WezTerm$" space=2 focus=on
-# yabai -m rule --add app="^Safari$" space=3
-# yabai -m signal --add event=window_created app="^WezTerm$" action="yabai -m window \$YABAI_WINDOW_ID --space 2; yabai -m window --focus \$YABAI_WINDOW_ID"
-# yabai -m signal --add event=window_created app="^Safari$" action="yabai -m window --focus \$YABAI_WINDOW_ID"
-
+yabai -m rule --add app="^Safari$" manage=on
 default_spaces_count=3
 current_spaces_count=$(yabai -m query --spaces | jq '. | length')
 while [ "$current_spaces_count" -lt "$default_spaces_count" ]; do
@@ -24,7 +18,7 @@ yabai -m config                                 \
     mouse_follows_focus          off            \
     focus_follows_mouse          off            \
     display_arrangement_order    default        \
-    window_origin_display        default        \
+    window_origin_display        focused        \
     window_placement             second_child   \
     window_insertion_point       focused        \
     window_zoom_persist          on             \
@@ -33,7 +27,7 @@ yabai -m config                                 \
     window_animation_easing      ease_out_circ  \
     window_opacity_duration      0.0            \
     active_window_opacity        1.0            \
-    normal_window_opacity        0.90           \
+    normal_window_opacity        0.80           \
     window_opacity               on             \
     insert_feedback_color        0xffd75f5f     \
     split_ratio                  0.50           \
@@ -43,9 +37,18 @@ yabai -m config                                 \
     bottom_padding               00             \
     left_padding                 00             \
     right_padding                00             \
-    window_gap                   00             \
+    window_gap                   10             \
     layout                       bsp            \
     mouse_modifier               fn             \
     mouse_action1                move           \
     mouse_action2                resize         \
     mouse_drop_action            swap
+
+yabai -m rule --add app="^Firefox$" manage=on space=1
+# yabai -m rule --add app="^Firefox$" manage=on grid=1:2:0:0:1:1 space=1
+
+# # Exclude problematic apps from being managed:
+yabai -m rule --add app="^(Calculator|Software Update|Dictionary|VLC|System Preferences|System Settings|App Store|Steam|Activity Monitor)$" manage=off
+yabai -m rule --add label="Finder" app="^Finder$" title="(Co(py|nnect)|Move|Info|Pref)" manage=off
+yabai -m rule --add label="Safari" app="^Safari$" title="^(General|(Tab|Password|Website|Extension)s|AutoFill|Se(arch|curity)|Privacy|Advance)$" manage=off
+yabai -m rule --add label="About This Mac" app="System Information" title="About This Mac" manage=off
